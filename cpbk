@@ -1,0 +1,66 @@
+#!/bin/bash
+#
+# NAME:
+#       cpbk.sh
+#
+# DESCRIPTION:
+#       Backup for file
+#
+# USAGE:
+#       ./cpbk.sh <file>
+#
+# CHANGELOG:
+#       2006-10-20  Kouhei Maeda <mkouhei at palmtb.net>
+#       * Version 1.1
+#       
+#       2005-12-20  Kouhei Maeda <mkouhei at palmtb.net>
+#       * Version 1.0
+#       * Original 
+#============================================================================
+
+unset LANG
+FILE=$1
+CNT=1
+MAX=7
+
+function CheckFilePermition {
+	PERM1=`ls -l $1 | awk '{ print $1 }'`
+	PERM2=`ls -l $2 | awk '{ print $1 }'`
+	if [ $PERM1 != $PERM2 ]; then
+		echo "##### File Permition is not Match!! #####"
+		echo $PERM1 : $1
+		echo $PERM2 : $2
+	fi
+}
+
+# For Linux Only 
+function CheckMd5Hash {
+	HASH1=`md5sum $1 | awk '{ print $1 }'`
+	HASH2=`md5sum $2 | awk '{ print $1 }'`
+	if [ $HASH1 != $HASH2 ]; then
+		echo "##### MD5 HASH is not Match!! #####"
+		echo $HASH1 : $1
+		echo $HASH2 : $2
+	fi
+}
+
+test   -z $FILE &&  echo "ARG : File" && exit 1 
+test ! -f $FILE &&  echo "ARG : File" && exit 2 
+test ! -d ./backup && mkdir ./backup
+
+DATE=`date +%Y%m%d`
+
+while [ $CNT -le $MAX ]
+do
+	if [ -f ./backup/${FILE}.${DATE}_${CNT} ]; then
+		CNT=`expr $CNT + 1`
+	else
+		cp -p              $FILE backup/${FILE}.${DATE}_${CNT}
+		CheckFilePermition $FILE backup/${FILE}.${DATE}_${CNT}
+		diff               $FILE backup/${FILE}.${DATE}_${CNT}
+		CheckMd5Hash       $FILE backup/${FILE}.${DATE}_${CNT}
+		exit 0
+	fi	
+done
+
+exit 0
