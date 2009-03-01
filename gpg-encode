@@ -1,0 +1,17 @@
+#!/bin/sh
+command=`basename $0`
+if [ ! $1 ]; then
+    echo "Usage: $command filename"
+    exit 1
+fi
+
+file=$1
+
+if [ -f $file ]; then
+    echo -ne "Enter passphrase: \033[8m"
+    read passphrase
+    echo -ne "\033[0m"
+    echo $passphrase | gpg --force-mdc --passphrase-fd 0 --batch -c $file
+    rm -f $file
+fi
+exit 0
