@@ -14,14 +14,6 @@ echo "Loading `/bin/hostname`'s Packet Filters"
 #-------------------------------------------------------------
 # Set Variables
 #-------------------------------------------------------------
-DNSIP1="192.168.10.196"
-DNSIP2="192.168.1.1"
-WATCH="192.168.10.199"
-#NTPIP="210.173.160.87"
-NTPIP="192.168.10.196"
-MAIL="192.168.10.198"
-MAIL2="210.2.192.69"
-#LDAP="192.168.10.199"
 
 # Validation Source Address
 /sbin/sysctl -p > /dev/null
@@ -89,15 +81,12 @@ $IPTABLES -I OUTPUT 1 -j ACCEPT -m state --state RELATED,ESTABLISHED
 $IPTABLES -A OUTPUT -p icmp -j ACCEPT --icmp-type echo-request
 
 # DNS Query
-#$IPTABLES -A OUTPUT -p udp  -j ACCEPT -d $DNSIP1 --dport 53 -m state --state NEW
-#$IPTABLES -A OUTPUT -p udp  -j ACCEPT -d $DNSIP2 --dport 53 -m state --state NEW
 $IPTABLES -A OUTPUT -p udp  -j ACCEPT --dport 53 -m state --state NEW
 
 # SSH
 $IPTABLES -A OUTPUT -p tcp -j ACCEPT --dport 22  -m state --state NEW
 
 # NTP
-#$IPTABLES -A OUTPUT -p udp  -j ACCEPT -d $NTPIP --dport 123 -m state --state NEW
 $IPTABLES -A OUTPUT -p udp  -j ACCEPT --dport 123 -m state --state NEW
 
 # HTTP
@@ -113,13 +102,6 @@ $IPTABLES -A OUTPUT -p tcp -j ACCEPT --dport 873 -m state --state NEW
 # Proxy
 $IPTABLES -A OUTPUT -p tcp -j ACCEPT --dport 8080 -m state --state NEW
 $IPTABLES -A OUTPUT -p tcp -j ACCEPT --dport 8090 -m state --state NEW
-
-# IMAP
-#$IPTABLES -A OUTPUT -p tcp -j ACCEPT -d $MAIL --dport 993 -m state --state NEW
-$IPTABLES -A OUTPUT -p tcp -j ACCEPT -d $MAIL --dport 143 -m state --state NEW
-
-# LDAP
-#$IPTABLES -A OUTPUT -p tcp -j ACCEPT -d $LDAP --dport 389 -m state --state NEW
 
 # Git
 $IPTABLES -A OUTPUT -p tcp -j ACCEPT --dport 9418 -m state --state NEW
