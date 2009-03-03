@@ -11,8 +11,6 @@ case "$1" in
 'menuconfig')
 	sudo make-kpkg --rootcmd fakeroot clean
 	time make-kpkg --rootcmd fakeroot --config menuconfig --initrd --revision=$REVISION kernel-image kernel_headers modules_image
-	#time make-kpkg --rootcmd fakeroot --config menuconfig --revision=$REVISION configure
-	#time make-kpkg --rootcmd fakeroot --initrd --revision=$REVISION kernel-image kernel_headers modules_image
 	;;
 'defconfig')
 	sudo make-kpkg --rootcmd fakeroot clean

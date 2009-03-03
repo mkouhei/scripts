@@ -4,18 +4,18 @@
 #       kabegami.rb
 #
 # DESCRIPTION:
-#       Windowsで「日替わり壁紙君」というのがあるので、
+#       Windows�ǡ����ؤ���ɻ淯�פȤ����Τ�����Τǡ�
 #       (http://www.vector.co.jp/soft/win95/amuse/se186329.html)
-#       Linuxでも欲しいなあと思い、シェルスクリプトで書けばすぐできるが、
-#       Rubyの勉強を兼ねて、あえてRubyで書いてみた。
+#       Linux�Ǥ��ߤ����ʤ��Ȼפ��������륹����ץȤǽ񤱤Ф����Ǥ��뤬��
+#       Ruby���ٶ����ͤơ�������Ruby�ǽ񤤤Ƥߤ���
 #
 # USAGE:
 #       ./kabegami.rb
-#       (1)まず、ホームディレクトリ直下にwallpaperというディレクトリを作る
-#       (2)そこに拡張子がjpg,pngの画像ファイルを置く
-#          サブディレクトリを作っても良し
-#       (3).bash_profileなどで呼び出すようにしておけば、ログインのたびに
-#          ランダムで壁紙を切替える。
+#       (1)�ޤ����ۡ���ǥ��쥯�ȥ�ľ����wallpaper�Ȥ����ǥ��쥯�ȥ����
+#       (2)�����˳�ĥ�Ҥ�jpg,png�β����ե�������֤�
+#          ���֥ǥ��쥯�ȥ���äƤ��ɤ�
+#       (3).bash_profile�ʤɤǸƤӽФ��褦�ˤ��Ƥ����С���������Τ��Ӥ�
+#          ��������ɻ�����ؤ��롣
 #
 # CHANGELOG:
 #       2005-12-20  Kouhei Maeda <mkouhei at palmtb.net>

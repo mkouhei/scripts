@@ -1,0 +1,169 @@
+#!/bin/bash
+# /etc/rc.iptables
+#
+
+IPTABLES=/sbin/iptables
+test -x $IPATBLES || exit 5
+
+case "$1" in
+start)
+modprobe ip_conntrack_ftp
+echo "Loading `/bin/hostname`'s Packet Filters"
+
+
+#-------------------------------------------------------------
+# Set Variables
+#-------------------------------------------------------------
+DNSIP1="192.168.10.196"
+DNSIP2="192.168.1.1"
+WATCH="192.168.10.199"
+#NTPIP="210.173.160.87"
+NTPIP="192.168.10.196"
+MAIL="192.168.10.198"
+MAIL2="210.2.192.69"
+#LDAP="192.168.10.199"
+
+# Validation Source Address
+/sbin/sysctl -p > /dev/null
+
+
+#-------------------------------------------------------------
+# Initialize Rule
+#-------------------------------------------------------------
+# Flush Old Rule, Old Custom Table
+$IPTABLES --flush
+$IPTABLES --delete-chain
+
+# Default Drop Policy
+$IPTABLES -P INPUT DROP
+$IPTABLES -P FORWARD DROP
+$IPTABLES -P OUTPUT DROP
+
+# Localback I/F All Accept
+$IPTABLES -A INPUT  -i lo -j ACCEPT
+$IPTABLES -A OUTPUT -o lo -j ACCEPT
+
+# Spoofed Source Address 1
+$IPTABLES -A INPUT -s 255.0.0.0/8   -j LOG --log-prefix "Spoofed source IP!"
+$IPTABLES -A INPUT -s 255.0.0.0/8   -j DROP
+$IPTABLES -A INPUT -s 0.0.0.0/8     -j LOG --log-prefix "Spoofed source IP!"
+$IPTABLES -A INPUT -s 0.0.0.0/8     -j DROP
+$IPTABLES -A INPUT -s 127.0.0.0/8   -j LOG --log-prefix "Spoofed source IP!"
+$IPTABLES -A INPUT -s 127.0.0.0/8   -j DROP
+$IPTABLES -A INPUT -s 172.16.0.0/12 -j LOG --log-prefix "Spoofed source IP!"
+$IPTABLES -A INPUT -s 172.16.0.0/12 -j DROP
+$IPTABLES -A INPUT -s 10.0.0.0/8    -j LOG --log-prefix "Spoofed source IP!"
+$IPTABLES -A INPUT -s 10.0.0.0/8    -j DROP
+
+# Stealth Scan
+$IPTABLES -A INPUT -p tcp ! --syn -m state --state NEW -j LOG --log-prefix "Stealth scan attempt?"
+$IPTABLES -A INPUT -p tcp ! --syn -m state --state NEW -j DROP
+
+
+#-------------------------------------------------------------
+# INPUT Chain
+#-------------------------------------------------------------
+# Established Session
+$IPTABLES -A INPUT -j ACCEPT -m state --state ESTABLISHED,RELATED
+
+# SSH
+#$IPTABLES -A INPUT -p tcp -j ACCEPT -s 192.168.10.0/24 --dport 22 -m state --state NEW
+
+# ping
+#$IPTABLES -A INPUT -p icmp -j ACCEPT --icmp-type echo-request -s 192.168.10.0/24
+
+# DHCP 
+$IPTABLES -A INPUT -p udp -j ACCEPT --sport 67 -d 255.255.255.255 --dport 68 -m state --state NEW
+
+# Default Drop
+$IPTABLES -A INPUT -j LOG --log-prefix "Dropped by default:"
+
+
+#-------------------------------------------------------------
+# OUTPUT Chain
+#-------------------------------------------------------------
+# Established Session
+$IPTABLES -I OUTPUT 1 -j ACCEPT -m state --state RELATED,ESTABLISHED
+
+# ping
+$IPTABLES -A OUTPUT -p icmp -j ACCEPT --icmp-type echo-request
+
+# DNS Query
+#$IPTABLES -A OUTPUT -p udp  -j ACCEPT -d $DNSIP1 --dport 53 -m state --state NEW
+#$IPTABLES -A OUTPUT -p udp  -j ACCEPT -d $DNSIP2 --dport 53 -m state --state NEW
+$IPTABLES -A OUTPUT -p udp  -j ACCEPT --dport 53 -m state --state NEW
+
+# SSH
+$IPTABLES -A OUTPUT -p tcp -j ACCEPT --dport 22  -m state --state NEW
+
+# NTP
+#$IPTABLES -A OUTPUT -p udp  -j ACCEPT -d $NTPIP --dport 123 -m state --state NEW
+$IPTABLES -A OUTPUT -p udp  -j ACCEPT --dport 123 -m state --state NEW
+
+# HTTP
+$IPTABLES -A OUTPUT -p tcp -j ACCEPT --dport 80   -m state --state NEW
+$IPTABLES -A OUTPUT -p tcp -j ACCEPT --dport 443  -m state --state NEW
+
+# FTP
+$IPTABLES -A OUTPUT -p tcp -j ACCEPT --dport 20:21  -m state --state NEW,RELATED
+
+# RSYNC
+$IPTABLES -A OUTPUT -p tcp -j ACCEPT --dport 873 -m state --state NEW
+
+# Proxy
+$IPTABLES -A OUTPUT -p tcp -j ACCEPT --dport 8080 -m state --state NEW
+$IPTABLES -A OUTPUT -p tcp -j ACCEPT --dport 8090 -m state --state NEW
+
+# IMAP
+#$IPTABLES -A OUTPUT -p tcp -j ACCEPT -d $MAIL --dport 993 -m state --state NEW
+$IPTABLES -A OUTPUT -p tcp -j ACCEPT -d $MAIL --dport 143 -m state --state NEW
+
+# LDAP
+#$IPTABLES -A OUTPUT -p tcp -j ACCEPT -d $LDAP --dport 389 -m state --state NEW
+
+# Git
+$IPTABLES -A OUTPUT -p tcp -j ACCEPT --dport 9418 -m state --state NEW
+
+# IRC
+$IPTABLES -A OUTPUT -p tcp -j ACCEPT --dport 6667 -m state --state NEW
+
+# whois
+$IPTABLES -A OUTPUT -p tcp -j ACCEPT --dport 43 -m state --state NEW
+
+# DHCP
+$IPTABLES -A OUTPUT -p udp -j ACCEPT --sport 68 --dport 67 -m state --state NEW
+
+
+# Default Drop
+$IPTABLES -A OUTPUT -j LOG --log-prefix "Dropped by default:"
+;;
+
+
+wide_open)
+echo -n "DANGER!! Unloading mail's Packet Filters!!"
+
+$IPTABLES --flush
+$IPTABLES -P INPUT ACCEPT
+#$IPTABLES -P FORWARD ACCEPT
+$IPTABLES -P OUTPUT ACCEPT
+;;
+
+stop)
+echo -n "Porcullis rope CUT..."
+
+$IPTABLES --flush
+;;
+
+status)
+echo "Querying iptables status (via iptables --list)..."
+
+$IPTABLES --line-numbers -v --list
+;;
+
+
+*)
+echo "Usage; $0 {start|stop|wide_open|status}"
+exit 1
+;;
+esac
+
