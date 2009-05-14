@@ -114,6 +114,7 @@ $IPTABLES -A OUTPUT -p tcp -j ACCEPT --dport 43 -m state --state NEW
 
 # DHCP
 $IPTABLES -A OUTPUT -p udp -j ACCEPT --sport 68 --dport 67 -m state --state NEW
+$IPTABLES -A OUTPUT -p udp -j ACCEPT --sport 67 --dport 68 -m state --state NEW
 
 
 # Default Drop
