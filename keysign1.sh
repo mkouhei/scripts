@@ -1,7 +1,8 @@
 #!/bin/bash
 
 KEYDIR="${HOME}/gpg/mysigned/"
-MYKEY="0xDD783BD9"
+#MYKEY="0xDD783BD9"
+MYKEY="0x432A7A04"
 KEYSERVER="18.92.0.144"
 test -z $1 && exit 1
 
