@@ -11,7 +11,9 @@ fi
 if [ "$?" -eq 0 ];
 then
 	mount /dev/dvd
+	sleep 3
 	ls /media/cdrom
+	sleep 3
 	umount /media/cdrom0
 fi
 
