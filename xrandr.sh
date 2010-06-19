@@ -4,10 +4,10 @@ case "$1" in
 
 start)
 	#xrandr --output "LVDS" --mode 1280x800 --output "VGA" --mode 1280x800
-	xrandr --output "LVDS" --mode 1280x800 --output "VGA" --mode 1024x768
+	xrandr --output "LVDS" --mode 1280x800 --output "VGA0" --mode 1024x768
 	;;
 stop)
-	xrandr --output "LVDS" --mode 1280x800 --output "VGA" --off
+	xrandr --output "LVDS" --mode 1280x800 --output "VGA0" --off
 	;;
 status)
 	xrandr
