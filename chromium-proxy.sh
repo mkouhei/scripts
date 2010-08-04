@@ -1,3 +1,4 @@
 #!/bin/bash
-export all_proxy=mao.bmobile.ne.jp:32080
-chromium-browser
+
+PAC=${HOME}/bin/proxy.pac
+chromium-browser --proxy-pac-url="file://${PAC}"
