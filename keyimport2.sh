@@ -1,7 +1,8 @@
 #!/bin/bash
 #MYKEY="0xDD783BD9"
 MYKEY="0x432A7A04"
-KEYSERVER="18.92.0.144"
+#KEYSERVER="18.92.0.144"
+KEYSERVER="202.12.30.53"
 
 test -z $1 && exit 1
 test ! -f $1 && exit 2
