@@ -3,7 +3,7 @@
 test -z $1 && exit 1
 ISOIMAGE=$1
 
-wodim -v dev='/dev/scd0' speed=10 $ISOIMAGE
+wodim -v dev='/dev/cdrom' speed=10 $ISOIMAGE
 
 if [ "$?" -eq 0 ];
 then
