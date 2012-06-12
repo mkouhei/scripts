@@ -1,6 +1,6 @@
 #!/bin/bash 
 
-SKYPE_DIR=~/download/skype_static-2.2.0.35
+SKYPE_DIR=~/download/skype
 CMD=skype
 
 case "$1" in
