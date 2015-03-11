@@ -25,10 +25,8 @@ setxkbmap
 #xmodmap -e "keycode 77 = Delete"
 
 # for MacBookPro Mid 2012 13"
-#xmodmap -e "keycode 49 = Super_L"
-#xmodmap -e "keycode 62 = Pointer_Button3"
-#xmodmap -e "keycode 66 = Pointer_Button2"
-#xmodmap -e "keycode 22 = Delete"
+xmodmap -e "keycode 62 = Pointer_Button3"
+xmodmap -e "keycode 49 = Pointer_Button2"
 
 xkbset m
 xkbset exp m
