@@ -1,9 +1,10 @@
 #!/bin/bash
 
 KEYDIR="${HOME}/gpg/mysigned/"
-#MYKEY="0xDD783BD9"
-MYKEY="0x432A7A04"
-KEYSERVER="18.92.0.144"
+MYKEY="0x7E37CE41"
+KEYSERVER=pgp.mit.edu
+#KEYSERVER=pgp.nic.ad.jp
+
 test -z $1 && exit 1
 
 KEYID="0x${1}"
