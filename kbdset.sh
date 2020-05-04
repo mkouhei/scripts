@@ -30,12 +30,13 @@ xmodmap -e "keycode 62 = Pointer_Button3"
 xmodmap -e "keycode 107 = Pointer_Button2"
 
 # left alt
-#xmodmap -e "keycode 64 = Meta_L"
+#xmodmap -e "keycode 64 = Super_L"
 
 # capslock
 xmodmap -e "keycode 66 = Control_L NoSymbol Control_L"
 xmodmap -e "clear lock"
 xmodmap -e "add Control = Control_L"
+xmodmap -e "keycode 108 = Pointer_Button2"
 
 xkbset m
 xkbset exp m
